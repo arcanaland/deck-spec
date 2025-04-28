@@ -154,12 +154,14 @@ esoterica = [
 
 ## Canonical ID and File Behavior
 
-Cards are referenced internally using **canonical IDs**:
+Cards are referenced internally using **canonical IDs**, which are the only official way to identify cards in this specification:
 
 - Major Arcana: `major_arcana.00` to `major_arcana.21`
 - Minor Arcana: `minor_arcana.<suit>.<rank>` where:
   - `<suit>`: `wands`, `cups`, `swords`, `pentacles`
   - `<rank>`: `ace`, `two`, ..., `ten`, `page`, `knight`, `queen`, `king`
+
+All references to cards in the specification, including configuration files, custom cards, and i18n files must use these canonical IDs.
 
 ### File-Location-Based Defaults
 Applications are designed to **automatically detect and use files** placed in the expected directory structure without requiring additional configuration. For example:
@@ -213,17 +215,12 @@ For any card without a localized name, applications should use the names from th
 
 ```toml
 [major_arcana.alt_text]
-00 = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
-01 = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
+00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
+01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
 ...
 ```
 
-### Alt Text Requirements
-Alt text should describe the visual elements of the card. For example:
-- "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
-- "Five of Cups: A figure in a black cloak looks down at three spilled cups, while two full cups stand behind them."
-
-Note that interpretation elements (such as "represents new beginnings") should be kept in esoterica files, not in the alt text within the deck specification.
+Alt text should describe the visual elements of the card. Interpretation elements (such as "represents new beginnings") should be kept in esoterica files, not in the alt text within the deck specification.
 
 ---
 
@@ -338,9 +335,8 @@ esoterica = [
   { id = "golden-dawn", name = "Golden Dawn Attributions", uri = "https://arcana.land/esoterica/golden-dawn.toml" }
 ]
 
-[cards.major_arcana]
-the_fool = { id = "00", image = "scalable/major_arcana/00.svg", alt_text = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels." }
-the_magician = { id = "01", image = "scalable/major_arcana/01.svg", alt_text = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground." }
+# Note that card definitions rely on the canonical file structure
+# and canonical IDs (major_arcana.00, etc.) rather than being explicitly defined here
 ```
 
 ### Custom Deck with Non-Standard Names
