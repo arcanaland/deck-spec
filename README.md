@@ -323,8 +323,10 @@ favorite_cards = ["major_arcana.00", "minor_arcana.wands.ace"]
 
 ## Examples
 
-### Rider Waite Smith deck.toml
+### Rider Waite Smith
+
 ```toml
+# deck.toml
 [deck]
 id = "rider-waite-smith"
 name = "Rider-Waite-Smith"
@@ -350,8 +352,7 @@ esoterica = [
 # Note that card definitions rely on the canonical file structure
 # and canonical IDs (major_arcana.00, etc.) rather than being explicitly defined here
 ```
-
-### Example of Rider Waite Smith names/en.toml
+With names and alt text in `names/en.toml`:
 ```toml
 # Card name localization
 [major_arcana]
@@ -378,7 +379,9 @@ two = "A figure in a flowing robe stands on a cliff holding two staves, looking 
 # ... and so on
 ```
 
+
 ### Custom Deck with Non-Standard Names
+
 
 ```toml
 # deck.toml
@@ -421,7 +424,7 @@ esoterica = [
 ]
 ```
 
-### Example of a Custom Deck names/en.toml with Alt Text
+And the alt-text in `names/en.toml`:
 ```toml
 # Standard card names follow canonical IDs
 [major_arcana]
@@ -445,44 +448,3 @@ two = "Two of Torches"
 [major_arcana.alt_text.elemental_force]
 elemental_force = "A vortex of the four elements (fire, water, air, earth) swirling together in perfect harmony."
 ```
-
-### Standard Deck Structure
-
-This spec is designed so that creating a custom deck should only require creating a minimal `deck.toml` file with your card
-images placed in a reasonable directory structure.
-
-```
-tux-tarot/
-  deck.toml
-  h1024/
-    major_arcana/
-      00.png  # The Fool
-      01.png  # The Magician
-      ...
-      21.png  # The World
-    minor_arcana/
-      wands/
-        ace.png
-        two.png
-        ...
-        king.png
-      cups/
-        ace.png
-        two.png
-        ...
-        king.png
-      swords/
-        ace.png
-        two.png
-        ...
-        king.png
-      pentacles/
-        ace.png
-        two.png
-        ...
-        king.png
-  names/
-    en.toml   # Contains both card names and alt text
-```
-
-By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
