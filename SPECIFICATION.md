@@ -135,6 +135,19 @@ cards = [
 ]
 ```
 
+### Optional Companion Files
+
+Decks can link to compatible interpretation files and other companion resources while maintaining separation of concerns:
+
+```toml
+[deck.companions]
+# Optional section listing compatible companion files
+interpretations = [
+  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://example.com/interpretations/waite-rws.toml" },
+  { id = "modern-psychological", name = "Modern Psychological Approach", uri = "local://interpretations/rws-psychological.toml" }
+]
+```
+
 ---
 
 ## Canonical ID and File Behavior
@@ -198,15 +211,61 @@ For any card without a localized name, applications should use the names from th
 
 ```toml
 [major_arcana.alt_text]
-00 = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks."
-01 = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground. Represents manifestation and channeling divine energy."
+00 = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
+01 = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
 ...
 ```
 
 ### Alt Text Requirements
-Alt text should describe both visual elements and symbolic meaning. For example:
-- "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks."
-- "Five of Cups: A figure in a black cloak looks down at three spilled cups, while two full cups stand behind them. Represents grief, regret, and not seeing what remains."
+Alt text should describe the visual elements of the card. For example:
+- "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
+- "Five of Cups: A figure in a black cloak looks down at three spilled cups, while two full cups stand behind them."
+
+Note that interpretation elements (such as "represents new beginnings") should be kept in interpretation files, not in the alt text within the deck specification.
+
+---
+
+## Interpretation File Compatibility
+
+While this specification focuses exclusively on presentation aspects of tarot decks, it provides a foundation for companion interpretation files through a standardized mapping system.
+
+### Interpretation Files
+
+Interpretation files (which will be specified in a separate document) follow these guidelines for compatibility:
+
+1. They reference the same canonical IDs used in this specification
+2. They can be deck-specific or generic
+3. They can include meanings, elemental associations, astrological correspondences, etc.
+
+### Mapping System for Non-Standard Decks
+
+To ensure interpretation files can work with non-standard decks:
+
+1. **Aliases**: The `[aliases]` section in deck.toml provides information for converting between non-standard and standard naming conventions
+2. **Remapping**: The `[remap_major_arcana]` section maps cards that have different positions in the sequence
+3. **Custom Cards**: Custom cards defined in deck.toml can have custom interpretations in interpretation files
+
+### Example of Interpretation Mapping (In Interpretation Files)
+
+```toml
+# This would be in an interpretation file, not in deck.toml
+[interpretation]
+schema_version = "1.0"
+name = "Traditional RWS Meanings"
+compatible_decks = ["rider-waite-smith", "cosmic-tarot"]
+
+# Standard mappings section that links non-standard names to canonical IDs
+[interpretation.card_mappings]
+"minor_arcana.torches.prince" = "minor_arcana.wands.knight"
+"minor_arcana.disks.princess" = "minor_arcana.pentacles.page"
+"major_arcana.adjustment" = "major_arcana.11"  # Thoth's Justice equivalent
+
+# Custom cards have their own dedicated interpretations
+[interpretation.custom_cards.major_arcana.happy_squirrel]
+keywords = ["surprise", "playfulness", "hidden resources"]
+upright_meaning = "Unexpected resources and opportunities appearing in your life"
+reversed_meaning = "Missing opportunities due to lack of awareness"
+```
 
 ---
 
@@ -270,31 +329,66 @@ publisher = "US Games Systems"
 website = "https://example.com/rws-deck"
 tags = ["traditional", "classic", "beginner-friendly"]
 
+# Link to compatible interpretation files
+[deck.companions]
+interpretations = [
+  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://example.com/interpretations/waite-rws.toml" },
+  { id = "golden-dawn", name = "Golden Dawn Attributions", uri = "https://example.com/interpretations/golden-dawn.toml" }
+]
+
 [cards.major_arcana]
-the_fool = { id = "00", image = "scalable/major_arcana/00.svg", alt_text = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks." }
-the_magician = { id = "01", image = "scalable/major_arcana/01.svg", alt_text = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground. Represents manifestation and channeling divine energy." }
+the_fool = { id = "00", image = "scalable/major_arcana/00.svg", alt_text = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels." }
+the_magician = { id = "01", image = "scalable/major_arcana/01.svg", alt_text = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground." }
 ```
 
-### Custom Deck
-
-This spec is designed so that creating a custom deck should only require creating a minimal `deck.toml` file with your card
-images placed in a reasonable directory structure.
+### Custom Deck with Non-Standard Names
 
 ```toml
 # deck.toml
 [deck]
-id = "tux-tarot"
-name = "Tux Tarot"
-author = "Tux the Anointed"
+id = "elemental-torches"
+name = "Elemental Torches Tarot"
+author = "Fire Sage"
 version = "1.0"
 schema_version = "1.0"
-description = "A Rider-Waite-Smith style deck based on Tux on their Fool's Journey."
+description = "A fire-themed tarot deck with renamed suits and additional elemental cards."
 created_date = "2025-01-01"
-website = "https://example.com/tux-tarot"
-tags = ["digital", "open-source", "penguin-themed"]
+website = "https://example.com/elemental-torches"
+tags = ["elemental", "fire-themed"]
+
+# These aliases help interpretation files map to standard meanings
+[aliases.suits]
+wands = "Torches"
+cups = "Waters" 
+swords = "Winds"
+pentacles = "Stones"
+
+[aliases.courts]
+page = "Student"
+knight = "Warrior"
+queen = "Priestess"
+king = "Master"
+
+# Add a custom elemental card
+[custom_cards.major_arcana.elemental_force]
+id = "elemental_force"
+name = "The Elemental Force"
+image = "scalable/major_arcana/elemental_force.svg"
+alt_text = "A vortex of the four elements swirling together in perfect harmony."
+position = 22
+
+# Link to a dedicated interpretation file for this deck
+[deck.companions]
+interpretations = [
+  { id = "elemental-meanings", name = "Elemental Torches Interpretations", uri = "elemental-torches-interpretations.toml" }
+]
 ```
 
-Directory structure:
+### Standard Deck Structure
+
+This spec is designed so that creating a custom deck should only require creating a minimal `deck.toml` file with your card
+images placed in a reasonable directory structure.
+
 ```
 tux-tarot/
   deck.toml
