@@ -156,20 +156,7 @@ cards = [
 ]
 ```
 
-Note: While the `alt_text` field is shown here for custom cards, it's recommended to use the internationalization files (`names/*.toml`) for alt text to support localization. The `alt_text` field in custom cards definitions serves as a fallback or default.
-
-### Optional Companion Files
-
-Decks can link to compatible esoterica files and other companion resources while maintaining separation of concerns:
-
-```toml
-[deck.companions]
-# Optional section listing compatible companion files
-esoterica = [
-  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://arcana.land/esoterica/waite-rws.toml" },
-  { id = "modern-psychological", name = "Modern Psychological Approach", uri = "local://esoterica/rws-psychological.toml" }
-]
-```
+It is recommended to use the internationalization files (`names/*.toml`) for alt text to support localization. The `alt_text` field in custom cards definitions serves as a fallback or default.
 
 ### Optional Deck Variants
 
@@ -211,8 +198,6 @@ Applications are designed to **automatically detect and use files** placed in th
 
 This ensures that creating a deck can be as simple as placing files into the correct folders.
 
-While applications should not **depend** on user-visible names (such as localized names) or arbitrary filenames for logic, they **must** depend on the specified directory structure and file naming conventions to ensure the default behavior works as intended.
-
 ## Image Formats and Technical Requirements
 
 ### Vector Graphics
@@ -220,14 +205,14 @@ While applications should not **depend** on user-visible names (such as localize
 - Vector graphics should be placed in the `scalable/` directory
 
 ### Raster Graphics
-- Supported formats: PNG (preferred), JPEG, WebP
+- Recommended formats: PNG (preferred), JPEG, WebP
 - Recommended resolutions: h512, h1024, h2048 (height in pixels)
 - Each resolution should have its own directory (e.g., `h512/`, `h1024/`, `h2048/`)
 - PNG with alpha channel recommended for images requiring transparency
 
 ### Card Back Images
 - Placed in the `card_backs/` directory
-- Can use any supported image format (PNG, JPEG, SVG, WebP)
+- Can use any supported image format
 - May have different dimensions and aspect ratios from the card fronts
 - Applications must handle card backs appropriately, preserving their exact dimensions
 
@@ -249,23 +234,23 @@ While applications should not **depend** on user-visible names (such as localize
 [major_arcana]
 00 = "The Fool"
 01 = "The Magician"
-...
+# ...
 
 [minor_arcana.wands]
 ace = "Ace of Wands"
 two = "Two of Wands"
-...
+# ...
 
 # Alt text localization - this is where ALL alt text should be defined
 [major_arcana.alt_text]
 00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
 01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
-...
+# ...
 
 [minor_arcana.wands.alt_text]
 ace = "A hand emerging from a cloud holds a flowering wooden staff."
 two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
-...
+# ...
 
 # Card back alt text (optional)
 [card_backs.alt_text]
