@@ -1,6 +1,6 @@
-## Tarot Deck Specification v1.0
+# Tarot Deck Specification v1.0
 
-### Overview
+## Overview
 This specification defines a standard format for tarot decks used by tarot applications. The format is designed to:
 
 - Separate **presentation** (images, names) from **interpretation** (meanings, readings).
@@ -24,7 +24,7 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
 ```
 <deck-directory>/
   deck.toml
-  scalable/               # Vector images (SVG)
+  scalable/               # Vector images (SVG only)
     major_arcana/
       00.svg               # The Fool
       01.svg               # The Magician
@@ -42,6 +42,10 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
       pentacles/
         ...
   h512/                    # Raster images (optional)
+    (same structure as scalable/)
+  h1024/                   # Higher resolution raster images (optional)
+    (same structure as scalable/)
+  h2048/                   # Highest resolution raster images (optional)
     (same structure as scalable/)
   names/en.toml            # Optional localized names
   names/es.toml            # (etc)
@@ -64,6 +68,13 @@ author = "Pamela Colman Smith"   # Optional
 license = "Public Domain"        # Optional
 aspect_ratio = 0.5789            # Optional; default 11:19
 description = "The classic Rider-Waite-Smith tarot deck, first published in 1909." # Optional
+
+# Additional optional metadata
+created_date = "1909-12-01"      # Original creation date
+updated_date = "2025-01-15"      # Last update date
+publisher = "US Games Systems"   # Publisher information
+website = "https://example.com/rws-deck" # Website for the deck
+tags = ["traditional", "classic", "beginner-friendly"] # Categorization tags
 ```
 
 ### Optional Presentation Aliases
@@ -88,27 +99,43 @@ king = "Knight"
 11 = "strength" # Swap Strength to 11
 ```
 
+### Optional Excluded Cards
+
+```toml
+[deck.excluded_cards]
+# List cards that are intentionally excluded from this deck
+cards = [
+  "minor_arcana.pentacles.page",
+  "minor_arcana.pentacles.knight"
+]
+reason = "This historical Tarocchi deck excludes these court cards."
+```
+
 ### Optional Custom Cards and Dynamic Card Groups
 
 Custom cards or groups of cards can be defined under `[custom_cards]`. This allows for decks with entirely new suits or additional major arcana.
 
 ```toml
-[custom_cards.wild]
-id = "wild"
-name = "The Wild Card"
-image = "scalable/major_arcana/wild.svg"
-alt_text = "A card depicting chaos and unpredictability."
+[custom_cards]
+# Add a completely new card to major arcana
+[custom_cards.major_arcana.happy_squirrel]
+id = "happy_squirrel"  # This will be referenced as major_arcana.happy_squirrel
+name = "The Happy Squirrel"
+image = "scalable/major_arcana/happy_squirrel.svg"
+alt_text = "A cheerful squirrel gathering acorns, representing preparation and unexpected joy."
+position = 22  # Optional - indicates position in sequence after traditional cards
 
-[custom_cards.my_suit]
-name = "Orbs"
+# Add an entire new suit
+[custom_cards.minor_arcana.stars]
+name = "Stars"
 cards = [
-  { id = "ace", name = "Ace of Orbs", image = "scalable/minor_arcana/orbs/ace.svg", alt_text = "The Ace of Orbs, symbolizing new beginnings." },
-  { id = "two", name = "Two of Orbs", image = "scalable/minor_arcana/orbs/two.svg", alt_text = "The Two of Orbs, symbolizing choices and balance." }
+  { id = "ace", name = "Ace of Stars", image = "scalable/minor_arcana/stars/ace.svg" },
+  { id = "two", name = "Two of Stars", image = "scalable/minor_arcana/stars/two.svg" },
+  # ... and so on
 ]
 ```
 
 ---
-
 
 ## Canonical ID and File Behavior
 
@@ -127,6 +154,17 @@ This ensures that creating a deck can be as simple as placing files into the cor
 
 While applications should not **depend** on user-visible names (such as localized names) or arbitrary filenames for logic, they **must** depend on the specified directory structure and file naming conventions to ensure the default behavior works as intended.
 
+## Image Formats and Technical Requirements
+
+### Vector Graphics
+- SVG is the only supported vector format
+- Vector graphics should be placed in the `scalable/` directory
+
+### Raster Graphics
+- Supported formats: PNG (preferred), JPEG, WebP
+- Recommended resolutions: h512, h1024, h2048 (height in pixels)
+- Each resolution should have its own directory (e.g., `h512/`, `h1024/`, `h2048/`)
+- PNG with alpha channel recommended for images requiring transparency
 
 ## Aspect Ratio
 
@@ -160,10 +198,15 @@ For any card without a localized name, applications should use the names from th
 
 ```toml
 [major_arcana.alt_text]
-00 = "A card showing a figure stepping off a cliff."
-01 = "A card depicting a magician with one hand raised."
+00 = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks."
+01 = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground. Represents manifestation and channeling divine energy."
 ...
 ```
+
+### Alt Text Requirements
+Alt text should describe both visual elements and symbolic meaning. For example:
+- "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks."
+- "Five of Cups: A figure in a black cloak looks down at three spilled cups, while two full cups stand behind them. Represents grief, regret, and not seeing what remains."
 
 ---
 
@@ -221,10 +264,15 @@ license = "Public Domain"
 description = "The classic Rider-Waite-Smith tarot deck, first published in 1909."
 schema_version = "1.0"
 icon = "deck-icon.png" # Optional: deck preview image
+created_date = "1909-12-01"
+updated_date = "2025-01-15"
+publisher = "US Games Systems"
+website = "https://example.com/rws-deck"
+tags = ["traditional", "classic", "beginner-friendly"]
 
 [cards.major_arcana]
-the_fool = { id = "00", image = "scalable/major-arcana/00.svg", alt_text = "A card showing a figure stepping off a cliff." }
-the_magician = { id = "01", image = "scalable/major-arcana/01.svg", alt_text = "A card depicting a magician with one hand raised." }
+the_fool = { id = "00", image = "scalable/major_arcana/00.svg", alt_text = "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels. Represents new beginnings and taking risks." }
+the_magician = { id = "01", image = "scalable/major_arcana/01.svg", alt_text = "The Magician: A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground. Represents manifestation and channeling divine energy." }
 ```
 
 ### Custom Deck
@@ -241,6 +289,9 @@ author = "Tux the Anointed"
 version = "1.0"
 schema_version = "1.0"
 description = "A Rider-Waite-Smith style deck based on Tux on their Fool's Journey."
+created_date = "2025-01-01"
+website = "https://example.com/tux-tarot"
+tags = ["digital", "open-source", "penguin-themed"]
 ```
 
 Directory structure:
@@ -277,4 +328,4 @@ tux-tarot/
 ```
 
 By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
-
+```
