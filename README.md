@@ -9,7 +9,7 @@ This specification defines a standard format for tarot decks used by tarot appli
 - Support internationalization (i18n) and localization (l10n).
 - Allow flexibility for suit and court card renaming.
 - Support extensions for decks with extra or missing cards.
-- Ensure compatibility with vendor-provided **interpretation files**, which are designed to extend the functionality of tarot decks without being part of this specification. Vendor-provided interpretation files are external and define meanings, astrological associations, and other occult or interpretive material. This specification focuses exclusively on presentation.
+- Ensure compatibility with vendor-provided **esoterica files**, which are designed to extend the functionality of tarot decks without being part of this specification. Vendor-provided esoterica files are external and define meanings, astrological associations, and other occult or interpretive material. This specification focuses exclusively on presentation.
 
 Decks must be delivered as a directory with a mandatory `deck.toml` file at the root.
 
@@ -139,14 +139,14 @@ cards = [
 
 ### Optional Companion Files
 
-Decks can link to compatible interpretation files and other companion resources while maintaining separation of concerns:
+Decks can link to compatible esoterica files and other companion resources while maintaining separation of concerns:
 
 ```toml
 [deck.companions]
 # Optional section listing compatible companion files
-interpretations = [
-  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://example.com/interpretations/waite-rws.toml" },
-  { id = "modern-psychological", name = "Modern Psychological Approach", uri = "local://interpretations/rws-psychological.toml" }
+esoterica = [
+  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://arcana.land/esoterica/waite-rws.toml" },
+  { id = "modern-psychological", name = "Modern Psychological Approach", uri = "local://esoterica/rws-psychological.toml" }
 ]
 ```
 
@@ -223,17 +223,17 @@ Alt text should describe the visual elements of the card. For example:
 - "The Fool: A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
 - "Five of Cups: A figure in a black cloak looks down at three spilled cups, while two full cups stand behind them."
 
-Note that interpretation elements (such as "represents new beginnings") should be kept in interpretation files, not in the alt text within the deck specification.
+Note that interpretation elements (such as "represents new beginnings") should be kept in esoterica files, not in the alt text within the deck specification.
 
 ---
 
-## Interpretation File Compatibility
+## Esoterica File Compatibility
 
-While this specification focuses exclusively on presentation aspects of tarot decks, it provides a foundation for companion interpretation files through a standardized mapping system.
+While this specification focuses exclusively on presentation aspects of tarot decks, it provides a foundation for companion esoterica files through a standardized mapping system.
 
-### Interpretation Files
+### Esoterica Files
 
-Interpretation files (which will be specified in a separate document) follow these guidelines for compatibility:
+Esoterica files must follow the [arcanaland/esoterica-spec](https://github.com/arcanaland/esoterica-spec) specification, which means:
 
 1. They reference the same canonical IDs used in this specification
 2. They can be deck-specific or generic
@@ -241,29 +241,29 @@ Interpretation files (which will be specified in a separate document) follow the
 
 ### Mapping System for Non-Standard Decks
 
-To ensure interpretation files can work with non-standard decks:
+To ensure esoterica files can work with non-standard decks:
 
 1. **Aliases**: The `[aliases]` section in deck.toml provides information for converting between non-standard and standard naming conventions
 2. **Remapping**: The `[remap_major_arcana]` section maps cards that have different positions in the sequence
-3. **Custom Cards**: Custom cards defined in deck.toml can have custom interpretations in interpretation files
+3. **Custom Cards**: Custom cards defined in deck.toml can have custom interpretations in esoterica files
 
-### Example of Interpretation Mapping (In Interpretation Files)
+### Example of Esoterica Mapping (In Esoterica Files)
 
 ```toml
-# This would be in an interpretation file, not in deck.toml
-[interpretation]
+# This would be in an esoterica file, not in deck.toml
+[esoterica]
 schema_version = "1.0"
 name = "Traditional RWS Meanings"
 compatible_decks = ["rider-waite-smith", "cosmic-tarot"]
 
 # Standard mappings section that links non-standard names to canonical IDs
-[interpretation.card_mappings]
+[esoterica.card_mappings]
 "minor_arcana.torches.prince" = "minor_arcana.wands.knight"
 "minor_arcana.disks.princess" = "minor_arcana.pentacles.page"
 "major_arcana.adjustment" = "major_arcana.11"  # Thoth's Justice equivalent
 
 # Custom cards have their own dedicated interpretations
-[interpretation.custom_cards.major_arcana.happy_squirrel]
+[esoterica.custom_cards.major_arcana.happy_squirrel]
 keywords = ["surprise", "playfulness", "hidden resources"]
 upright_meaning = "Unexpected resources and opportunities appearing in your life"
 reversed_meaning = "Missing opportunities due to lack of awareness"
@@ -331,11 +331,11 @@ publisher = "US Games Systems"
 website = "https://example.com/rws-deck"
 tags = ["traditional", "classic", "beginner-friendly"]
 
-# Link to compatible interpretation files
+# Link to compatible esoterica files
 [deck.companions]
-interpretations = [
-  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://example.com/interpretations/waite-rws.toml" },
-  { id = "golden-dawn", name = "Golden Dawn Attributions", uri = "https://example.com/interpretations/golden-dawn.toml" }
+esoterica = [
+  { id = "waite-meanings", name = "A.E. Waite's Original Meanings", uri = "https://arcana.land/esoterica/waite-rws.toml" },
+  { id = "golden-dawn", name = "Golden Dawn Attributions", uri = "https://arcana.land/esoterica/golden-dawn.toml" }
 ]
 
 [cards.major_arcana]
@@ -358,7 +358,7 @@ created_date = "2025-01-01"
 website = "https://example.com/elemental-torches"
 tags = ["elemental", "fire-themed"]
 
-# These aliases help interpretation files map to standard meanings
+# These aliases help esoterica files map to standard meanings
 [aliases.suits]
 wands = "Torches"
 cups = "Waters" 
@@ -379,10 +379,10 @@ image = "scalable/major_arcana/elemental_force.svg"
 alt_text = "A vortex of the four elements swirling together in perfect harmony."
 position = 22
 
-# Link to a dedicated interpretation file for this deck
+# Link to a dedicated esoterica file for this deck
 [deck.companions]
-interpretations = [
-  { id = "elemental-meanings", name = "Elemental Torches Interpretations", uri = "elemental-torches-interpretations.toml" }
+esoterica = [
+  { id = "elemental-meanings", name = "Elemental Torches Esoterica", uri = "https://arcana.land/esoterica/elemental-torches.toml" }
 ]
 ```
 
@@ -424,4 +424,3 @@ tux-tarot/
 ```
 
 By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
-```
