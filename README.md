@@ -1,5 +1,7 @@
 # Tarot Deck Specification v1.0
 
+> Maintained by [Arcana Land](https://github.com/arcanaland).
+
 ## Overview
 This specification defines a standard format for tarot decks used by tarot applications. The format is designed to:
 
