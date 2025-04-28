@@ -26,7 +26,10 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
 ```
 <deck-directory>/
   deck.toml
-  scalable/               # Vector images (SVG only)
+  card_backs/              # Card back images in various formats
+    classic.png            # Default card back
+    alternative.png        # Optional variant backs
+  scalable/                # Vector images (SVG only)
     major_arcana/
       00.svg               # The Fool
       01.svg               # The Magician
@@ -78,6 +81,22 @@ publisher = "US Games Systems"   # Publisher information
 website = "https://example.com/rws-deck" # Website for the deck
 tags = ["traditional", "classic", "beginner-friendly"] # Categorization tags
 ```
+
+### Card Back Configuration
+
+```toml
+[card_backs]
+default = "classic"              # Required if multiple variants are defined
+
+# Define each card back variant
+[card_backs.variants.classic]
+name = "Classic RWS Back"        # Human-readable name
+image = "card_backs/classic.png" # Path to the card back image
+description = "The original blue and white rose pattern back" # Optional description
+alt_text = "A blue and white geometric pattern featuring roses and lilies" # Optional alt text
+```
+
+This structure allows decks to provide multiple card back options while maintaining a clear default choice. Card backs can have different dimensions and formats from the card fronts, and may be provided in multiple variants without duplicating the entire deck.
 
 ### Optional Presentation Aliases
 
@@ -152,6 +171,27 @@ esoterica = [
 ]
 ```
 
+### Optional Deck Variants
+
+For decks that have multiple editions or variants sharing the same card fronts:
+
+```toml
+[variants]
+# Define deck variants that share the same card fronts
+[variants.standard]
+id = "rider-waite-smith-standard"
+name = "Rider-Waite-Smith (Standard)"
+card_back = "classic"  # References card_backs.variants.classic
+publisher = "US Games Systems"
+
+[variants.rider_edition]
+id = "rider-waite-smith-rider"
+name = "Rider-Waite-Smith (Rider Edition)"
+card_back = "rider"    # References card_backs.variants.rider
+publisher = "Rider & Company"
+created_date = "1912-01-01"
+```
+
 ---
 
 ## Canonical ID and File Behavior
@@ -184,6 +224,12 @@ While applications should not **depend** on user-visible names (such as localize
 - Recommended resolutions: h512, h1024, h2048 (height in pixels)
 - Each resolution should have its own directory (e.g., `h512/`, `h1024/`, `h2048/`)
 - PNG with alpha channel recommended for images requiring transparency
+
+### Card Back Images
+- Placed in the `card_backs/` directory
+- Can use any supported image format (PNG, JPEG, SVG, WebP)
+- May have different dimensions and aspect ratios from the card fronts
+- Applications must handle card backs appropriately, preserving their exact dimensions
 
 ## Aspect Ratio
 
@@ -220,6 +266,11 @@ two = "Two of Wands"
 ace = "A hand emerging from a cloud holds a flowering wooden staff."
 two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
 ...
+
+# Card back alt text (optional)
+[card_backs.alt_text]
+classic = "A blue and white geometric pattern featuring roses and lilies"
+alternative = "A starry night sky pattern with gold accents"
 ```
 
 ### Alt Text Guidelines
@@ -294,6 +345,10 @@ Applications should validate the following:
    - Verify that all localization files have consistent structures and no missing translations for required fields.
    - Verify that alt text is provided for all cards in at least one language file.
 
+4. **Card Back Validation**:
+   - If card back variants are defined, verify that the default card back exists.
+   - Verify that all referenced card back image files exist.
+
 ---
 
 ## Licensing and Attribution
@@ -332,15 +387,24 @@ id = "rider-waite-smith"
 name = "Rider-Waite-Smith"
 version = "1.0"
 author = "Pamela Colman Smith"
-license = "Public Domain"
+license = "Public Domain (original artwork), CC0 (digital restoration)"
+attribution = "Original artwork by Pamela Colman Smith (1909). Digital restoration by Luciella Elisabeth Scarlett."
 description = "The classic Rider-Waite-Smith tarot deck, first published in 1909."
 schema_version = "1.0"
-icon = "deck-icon.png" # Optional: deck preview image
 created_date = "1909-12-01"
-updated_date = "2025-01-15"
-publisher = "US Games Systems"
-website = "https://example.com/rws-deck"
+updated_date = "2025-04-28"
+publisher = "Original: US Games Systems, Digital: Luciella Elisabeth Scarlett"
+website = "https://luciellaes.itch.io/rider-waite-smith-tarot-cards-cc0"
 tags = ["traditional", "classic", "beginner-friendly"]
+
+# Card back configuration
+[card_backs]
+default = "classic"
+
+[card_backs.variants.classic]
+name = "Classic RWS Back"
+image = "card_backs/classic.png"
+description = "Card back design provided by Luciella Elisabeth Scarlett"
 
 # Link to compatible esoterica files
 [deck.companions]
@@ -377,11 +441,46 @@ two = "Two of Wands"
 ace = "A hand emerging from a cloud holds a flowering wooden staff."
 two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
 # ... and so on
+
+# Card back alt text
+[card_backs.alt_text]
+classic = "A blue and white geometric pattern with a rose design in the center"
 ```
 
+### Simple Custom Deck 
 
-### Custom Deck with Non-Standard Names
+This spec is designed so that creating a custom deck should only require creating a minimal `deck.toml` file with your card images placed in a reasonable directory structure.
 
+```
+my-custom-deck/
+  deck.toml
+  card_backs/
+    main.png
+  h1024/
+    major_arcana/
+      00.png          # The Fool
+      01.png          # The Magician
+      ...
+      21.png          # The World
+    minor_arcana/
+      wands/
+        ace.png
+        two.png
+        ...
+        king.png
+      cups/
+        ace.png
+        ...
+  names/
+    en.toml           # Contains both card names and alt text
+```
+
+By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
+
+
+### Custom Deck with Non-Standard Names and Multiple Card Backs
+
+This example shows a complex custom deck with custom suits, a new custom major arcana card and multiple card backs.
 
 ```toml
 # deck.toml
@@ -395,6 +494,20 @@ description = "A fire-themed tarot deck with renamed suits and additional elemen
 created_date = "2025-01-01"
 website = "https://example.com/elemental-torches"
 tags = ["elemental", "fire-themed"]
+
+# Card back configuration with multiple variants
+[card_backs]
+default = "flames"
+
+[card_backs.variants.flames]
+name = "Flame Pattern"
+image = "card_backs/flames.png"
+description = "A dynamic pattern of red and orange flames"
+
+[card_backs.variants.embers]
+name = "Glowing Embers"
+image = "card_backs/embers.png"
+description = "A dark background with smoldering red embers"
 
 # These aliases help esoterica files map to standard meanings
 [aliases.suits]
@@ -422,6 +535,18 @@ position = 22
 esoterica = [
   { id = "elemental-meanings", name = "Elemental Torches Esoterica", uri = "https://arcana.land/esoterica/elemental-torches.toml" }
 ]
+
+# Define deck variants with different card backs
+[variants]
+[variants.standard]
+id = "elemental-torches-standard"
+name = "Elemental Torches (Standard Edition)"
+card_back = "flames"
+
+[variants.deluxe]
+id = "elemental-torches-deluxe"
+name = "Elemental Torches (Deluxe Edition)"
+card_back = "embers"
 ```
 
 And the alt-text in `names/en.toml`:
@@ -447,4 +572,9 @@ two = "Two of Torches"
 # Alt text for custom cards
 [major_arcana.alt_text.elemental_force]
 elemental_force = "A vortex of the four elements (fire, water, air, earth) swirling together in perfect harmony."
+
+# Card back alt text
+[card_backs.alt_text]
+flames = "A dynamic pattern of red and orange flames swirling around a central spark"
+embers = "A dark background with scattered glowing embers and occasional small flames"
 ```
