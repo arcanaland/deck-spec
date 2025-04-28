@@ -1,4 +1,4 @@
-## Tarot Deck Specification v1.1
+## Tarot Deck Specification v1.0
 
 ### Overview
 This specification defines a standard format for tarot decks used by tarot applications. The format is designed to:
@@ -51,17 +51,19 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
 
 ## deck.toml Schema
 
-### Required Fields
+### Common Fields
 
 ```toml
 [deck]
-id = "rider-waite-smith"  # Unique identifier
-schema_version = "1.1"    # Schema version (this document)
-name = "Rider-Waite-Smith Tarot"
-author = "Pamela Colman Smith"
-version = "1.0"           # Deck version
-aspect_ratio = 0.5789     # Optional; default 11:19
-description = "The classic Rider-Waite-Smith tarot deck, first published in 1909."
+id = "rider-waite-smith"         # Required: Unique identifier
+schema_version = "1.0"           # Required: Schema version (this document)
+name = "Rider-Waite-Smith Tarot" # Required: Human readable name
+version = "1.0"                  # Required: Deck version
+icon = "deck-icon.png"           # Optional: deck preview image
+author = "Pamela Colman Smith"   # Optional
+license = "Public Domain"        # Optional
+aspect_ratio = 0.5789            # Optional; default 11:19
+description = "The classic Rider-Waite-Smith tarot deck, first published in 1909." # Optional
 ```
 
 ### Optional Presentation Aliases
@@ -107,29 +109,30 @@ cards = [
 
 ---
 
-## Aspect Ratio
 
-- Standard assumed aspect ratio is **11:19** (~0.5789).
-- Raster folders are named `h<height>/`, e.g., `h512/`, `h1024/`.
-- Applications must preserve the aspect ratio when scaling images.
+## Canonical ID and File Behavior
 
----
-
-## Canonical IDs and Naming Conventions
-
-Cards are referenced internally using these **canonical IDs**:
+Cards are referenced internally using **canonical IDs**:
 
 - Major Arcana: `major_arcana.00` to `major_arcana.21`
 - Minor Arcana: `minor_arcana.<suit>.<rank>` where:
   - `<suit>`: `wands`, `cups`, `swords`, `pentacles`
   - `<rank>`: `ace`, `two`, ..., `ten`, `page`, `knight`, `queen`, `king`
 
-**File Naming Conventions**:
-- File names for images must match their canonical IDs to avoid conflicts. For example:
-  - Major Arcana: `scalable/major_arcana/00.svg`
-  - Minor Arcana: `scalable/minor_arcana/wands/ace.svg`
+### File-Location-Based Defaults
+Applications are designed to **automatically detect and use files** placed in the expected directory structure without requiring additional configuration. For example:
+- Dropping an image into `h1024/minor_arcana/wands/ace.png` will automatically map it to the card with the canonical ID `minor_arcana.wands.ace`.
 
-Applications should **never** depend on filenames or user-visible names for behavior.
+This ensures that creating a deck can be as simple as placing files into the correct folders.
+
+While applications should not **depend** on user-visible names (such as localized names) or arbitrary filenames for logic, they **must** depend on the specified directory structure and file naming conventions to ensure the default behavior works as intended.
+
+
+## Aspect Ratio
+
+- Standard assumed aspect ratio is **11:19** (~0.5789).
+- Raster folders are named `h<height>/`, e.g., `h512/`, `h1024/`.
+- Applications must preserve the aspect ratio when scaling images.
 
 ---
 
@@ -150,13 +153,15 @@ two = "Two of Wands"
 ...
 ```
 
+For any card without a localized name, applications should use the names from the default deck (most likely rider-waite-smith).
+
 - **Alt Text Localization**:
   - Alt-text descriptions for images should also be included in the localization files under an `alt_text` field:
 
 ```toml
 [major_arcana.alt_text]
-00 = "A card showing a figure stepping off a cliff, symbolizing new beginnings."
-01 = "A card depicting a magician with one hand raised, symbolizing power and action."
+00 = "A card showing a figure stepping off a cliff."
+01 = "A card depicting a magician with one hand raised."
 ...
 ```
 
@@ -214,7 +219,7 @@ version = "1.0"
 author = "Pamela Colman Smith"
 license = "Public Domain"
 description = "The classic Rider-Waite-Smith tarot deck, first published in 1909."
-schema_version = "1.1"
+schema_version = "1.0"
 icon = "deck-icon.png" # Optional: deck preview image
 
 [cards.major_arcana]
@@ -234,7 +239,7 @@ id = "tux-tarot"
 name = "Tux Tarot"
 author = "Tux the Anointed"
 version = "1.0"
-schema_version = "1.1"
+schema_version = "1.0"
 description = "A Rider-Waite-Smith style deck based on Tux on their Fool's Journey."
 ```
 
@@ -270,4 +275,6 @@ tux-tarot/
         ...
         king.png
 ```
+
+By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
 
