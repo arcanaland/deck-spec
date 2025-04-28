@@ -46,12 +46,9 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
         ...
       pentacles/
         ...
-  h512/                    # Raster images (optional)
-    (same structure as scalable/)
-  h1024/                   # Higher resolution raster images (optional)
-    (same structure as scalable/)
-  h2048/                   # Highest resolution raster images (optional)
-    (same structure as scalable/)
+  h750/                    # Low resolution raster images (optional)
+  h1200/                   # Medium resolution raster images (optional)
+  h2400/                   # High resolution raster images (optional)
   names/en.toml            # Optional localized names and alt text
   names/es.toml            # (etc)
 ```
@@ -194,7 +191,7 @@ All references to cards in the specification, including configuration files, cus
 
 ### File-Location-Based Defaults
 Applications are designed to **automatically detect and use files** placed in the expected directory structure without requiring additional configuration. For example:
-- Dropping an image into `h1024/minor_arcana/wands/ace.png` will automatically map it to the card with the canonical ID `minor_arcana.wands.ace`.
+- Dropping an image into `h1200/minor_arcana/wands/ace.png` will automatically map it to the card with the canonical ID `minor_arcana.wands.ace`.
 
 This ensures that creating a deck can be as simple as placing files into the correct folders.
 
@@ -206,9 +203,14 @@ This ensures that creating a deck can be as simple as placing files into the cor
 
 ### Raster Graphics
 - Recommended formats: PNG (preferred), JPEG, WebP
-- Recommended resolutions: h512, h1024, h2048 (height in pixels)
-- Each resolution should have its own directory (e.g., `h512/`, `h1024/`, `h2048/`)
+- Recommended resolutions: h750, h1200, h2400 (height in pixels)
+- Each resolution should have its own directory (e.g., `h750/`, `h1200/`, `h2400/`)
 - PNG with alpha channel recommended for images requiring transparency
+
+#### Resolution Usage Guidelines
+- **h750**: Use for mobile applications, thumbnails, and low-bandwidth environments
+- **h1200**: Use for standard web viewing, most desktop applications, and tablets
+- **h2400**: Use for high-resolution displays, printing, and when fine details need to be preserved
 
 ### Card Back Images
 - Placed in the `card_backs/` directory
@@ -219,7 +221,7 @@ This ensures that creating a deck can be as simple as placing files into the cor
 ## Aspect Ratio
 
 - Standard assumed aspect ratio is **11:19** (~0.5789).
-- Raster folders are named `h<height>/`, e.g., `h512/`, `h1024/`.
+- Raster folders are named `h<height>/`, e.g., `h750/`, `h1200/`.
 - Applications must preserve the aspect ratio when scaling images.
 
 ---
@@ -441,7 +443,7 @@ my-custom-deck/
   deck.toml
   card_backs/
     main.png
-  h1024/
+  h1200/
     major_arcana/
       00.png          # The Fool
       01.png          # The Magician
