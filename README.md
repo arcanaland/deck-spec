@@ -49,7 +49,7 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
     (same structure as scalable/)
   h2048/                   # Highest resolution raster images (optional)
     (same structure as scalable/)
-  names/en.toml            # Optional localized names
+  names/en.toml            # Optional localized names and alt text
   names/es.toml            # (etc)
 ```
 
@@ -137,6 +137,8 @@ cards = [
 ]
 ```
 
+Note: While the `alt_text` field is shown here for custom cards, it's recommended to use the internationalization files (`names/*.toml`) for alt text to support localization. The `alt_text` field in custom cards definitions serves as a fallback or default.
+
 ### Optional Companion Files
 
 Decks can link to compatible esoterica files and other companion resources while maintaining separation of concerns:
@@ -193,10 +195,11 @@ While applications should not **depend** on user-visible names (such as localize
 
 ## Internationalization
 
-- Localized names go into `names/<lang>.toml`, e.g., `names/en.toml`.
+- Localized names and alt text go into `names/<lang>.toml`, e.g., `names/en.toml`.
 - Structure mirrors canonical IDs:
 
 ```toml
+# Card name localization
 [major_arcana]
 00 = "The Fool"
 01 = "The Magician"
@@ -206,21 +209,29 @@ While applications should not **depend** on user-visible names (such as localize
 ace = "Ace of Wands"
 two = "Two of Wands"
 ...
-```
 
-For any card without a localized name, applications should use the names from the default deck (most likely rider-waite-smith).
-
-- **Alt Text Localization**:
-  - Alt-text descriptions for images should also be included in the localization files under an `alt_text` field:
-
-```toml
+# Alt text localization - this is where ALL alt text should be defined
 [major_arcana.alt_text]
 00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
 01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
 ...
+
+[minor_arcana.wands.alt_text]
+ace = "A hand emerging from a cloud holds a flowering wooden staff."
+two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
+...
 ```
 
-Alt text should describe the visual elements of the card. Interpretation elements (such as "represents new beginnings") should be kept in esoterica files, not in the alt text within the deck specification.
+### Alt Text Guidelines
+
+- **Alt text is always defined in the internationalization files** (`names/*.toml`), not in the main deck.toml file
+- Alt text should describe the visual elements of the card without interpretation
+- For the standard Rider Waite Smith deck, comprehensive alt text should be included in the default language file
+- Every deck should include at least one language file with alt text for accessibility
+- Alt text for custom cards follows the same pattern in the localization files, using the custom card's canonical ID
+- If alt text is provided in the `custom_cards` section, it should be considered a fallback only
+
+For any card without a localized name or alt text, applications should use the names and alt text from the default deck (most likely rider-waite-smith).
 
 ---
 
@@ -281,6 +292,7 @@ Applications should validate the following:
 
 3. **Localization Validation**:
    - Verify that all localization files have consistent structures and no missing translations for required fields.
+   - Verify that alt text is provided for all cards in at least one language file.
 
 ---
 
@@ -311,7 +323,7 @@ favorite_cards = ["major_arcana.00", "minor_arcana.wands.ace"]
 
 ## Examples
 
-### Rider Waite Smith
+### Rider Waite Smith deck.toml
 ```toml
 [deck]
 id = "rider-waite-smith"
@@ -337,6 +349,33 @@ esoterica = [
 
 # Note that card definitions rely on the canonical file structure
 # and canonical IDs (major_arcana.00, etc.) rather than being explicitly defined here
+```
+
+### Example of Rider Waite Smith names/en.toml
+```toml
+# Card name localization
+[major_arcana]
+00 = "The Fool"
+01 = "The Magician"
+02 = "The High Priestess"
+# ... and so on
+
+[minor_arcana.wands]
+ace = "Ace of Wands"
+two = "Two of Wands"
+# ... and so on
+
+# Alt text localization
+[major_arcana.alt_text]
+00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
+01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
+02 = "A robed female figure sits between two pillars, one black and one white, with a crescent moon at her feet."
+# ... and so on
+
+[minor_arcana.wands.alt_text]
+ace = "A hand emerging from a cloud holds a flowering wooden staff."
+two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
+# ... and so on
 ```
 
 ### Custom Deck with Non-Standard Names
@@ -382,6 +421,31 @@ esoterica = [
 ]
 ```
 
+### Example of a Custom Deck names/en.toml with Alt Text
+```toml
+# Standard card names follow canonical IDs
+[major_arcana]
+00 = "The Wanderer" # Custom name for The Fool
+01 = "The Alchemist" # Custom name for The Magician
+# ... and so on
+
+# Custom names for suits that match the aliases in deck.toml
+[minor_arcana.wands]
+ace = "Ace of Torches"
+two = "Two of Torches"
+# ... and so on
+
+# Alt text for standard cards
+[major_arcana.alt_text]
+00 = "A traveler with a backpack walks toward a fiery mountain, unaware of the cliff edge ahead."
+01 = "A figure in red robes manipulates the four elemental symbols above a workbench filled with alchemical tools."
+# ... and so on
+
+# Alt text for custom cards
+[major_arcana.alt_text.elemental_force]
+elemental_force = "A vortex of the four elements (fire, water, air, earth) swirling together in perfect harmony."
+```
+
 ### Standard Deck Structure
 
 This spec is designed so that creating a custom deck should only require creating a minimal `deck.toml` file with your card
@@ -417,6 +481,8 @@ tux-tarot/
         two.png
         ...
         king.png
+  names/
+    en.toml   # Contains both card names and alt text
 ```
 
 By following this structure and file-naming convention, applications can **automatically detect the images** and map them to the correct cards based on their canonical IDs.
