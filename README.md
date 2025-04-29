@@ -10,7 +10,7 @@ This specification defines a standard format for tarot decks used by tarot appli
 - Allow flexibility for suit and court card renaming.
 - Support extensions for decks with extra or missing cards.
 - Ensure compatibility with **esoterica files**, which provide meanings, divination aids, and interpretive details (see [esoterica spec](https://github.com/arcanaland/specifications/blob/main/ESOTERICA.md)), while this specification covers presentation only.
-- 
+ 
 Decks must be delivered as a directory with a mandatory `deck.toml` file at the root.
 
 ---
