@@ -418,19 +418,19 @@ two = "Two of Wands"
 # ... and so on
 
 # Alt text localization
-[major_arcana.alt_text]
+[alt_text.major_arcana]
 00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
 01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
 02 = "A robed female figure sits between two pillars, one black and one white, with a crescent moon at her feet."
 # ... and so on
 
-[minor_arcana.wands.alt_text]
+[alt_text.minor_arcana.wands]
 ace = "A hand emerging from a cloud holds a flowering wooden staff."
 two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
 # ... and so on
 
 # Card back alt text
-[card_backs.alt_text]
+[alt_text.card_backs]
 classic = "A blue and white geometric pattern with a rose design in the center"
 ```
 
@@ -551,17 +551,17 @@ two = "Two of Torches"
 # ... and so on
 
 # Alt text for standard cards
-[major_arcana.alt_text]
+[alt_text.major_arcana]
 00 = "A traveler with a backpack walks toward a fiery mountain, unaware of the cliff edge ahead."
 01 = "A figure in red robes manipulates the four elemental symbols above a workbench filled with alchemical tools."
 # ... and so on
 
 # Alt text for custom cards
-[major_arcana.alt_text.elemental_force]
+[alt_text.major_arcana.elemental_force]
 elemental_force = "A vortex of the four elements (fire, water, air, earth) swirling together in perfect harmony."
 
 # Card back alt text
-[card_backs.alt_text]
+[alt_text.card_backs]
 flames = "A dynamic pattern of red and orange flames swirling around a central spark"
 embers = "A dark background with scattered glowing embers and occasional small flames"
 ```
