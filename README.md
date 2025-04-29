@@ -244,18 +244,18 @@ two = "Two of Wands"
 # ...
 
 # Alt text localization - this is where ALL alt text should be defined
-[major_arcana.alt_text]
+[alt_text.major_arcana]
 00 = "A young person in colorful clothes steps off a cliff, carrying a white rose. A small dog jumps at their heels."
 01 = "A figure standing at a table with the four suit symbols, one hand raised toward the sky, the other pointing to the ground."
 # ...
 
-[minor_arcana.wands.alt_text]
+[alt_text.minor_arcana.wands]
 ace = "A hand emerging from a cloud holds a flowering wooden staff."
 two = "A figure in a flowing robe stands on a cliff holding two staves, looking out over the sea."
 # ...
 
 # Card back alt text (optional)
-[card_backs.alt_text]
+[alt_text.card_backs]
 classic = "A blue and white geometric pattern featuring roses and lilies"
 alternative = "A starry night sky pattern with gold accents"
 ```
