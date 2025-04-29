@@ -9,8 +9,8 @@ This specification defines a standard format for tarot decks used by tarot appli
 - Support internationalization (i18n) and localization (l10n).
 - Allow flexibility for suit and court card renaming.
 - Support extensions for decks with extra or missing cards.
-- Ensure compatibility with vendor-provided **esoterica files**, which are designed to extend the functionality of tarot decks without being part of this specification. Vendor-provided esoterica files are external and define meanings, astrological associations, and other occult or interpretive material. This specification focuses exclusively on presentation.
-
+- Ensure compatibility with **esoterica files**, which provide meanings, divination aids, and interpretive details (see [esoterica spec](https://github.com/arcanaland/specifications/blob/main/ESOTERICA.md)), while this specification covers presentation only.
+- 
 Decks must be delivered as a directory with a mandatory `deck.toml` file at the root.
 
 ---
