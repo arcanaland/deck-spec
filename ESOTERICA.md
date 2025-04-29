@@ -89,9 +89,9 @@ Each esoterica layer is a single TOML file with this basic structure:
 [meta]
 schema_version = "1.0"
 default_language = "en"
-id = "golden-dawn-astrology"
-name = "Golden Dawn Astrological Correspondences"
-type = "correspondences"  # meanings, correspondences, context, tradition
+id = "love-context"
+name = "Love Context Interpretations"
+type = "context.love"
 version = "1.0"
 author = "ledif"
 license = "CC-BY-SA-4.0"
@@ -136,6 +136,10 @@ decan = "third decan of aries"
 planetary_ruler = "venus"
 ```
 
+
+The type field is dynamic and can include any category relevant to tarot correspondences. New categories should be descriptive and documented within the description field to ensure clarity and usability. Applications should handle unknown types gracefully by ignoring them or logging their presence for future updates. The `type` field in the metadata supports hierarchical namespaces to organize layers. For example, `context.love` specifies that the layer belongs to the `context` category and focuses on `love`. Collections can reference these namespaces directly, allowing dynamic resolution of files.
+
+
 ## Collection Files
 
 A collection file can reference multiple layer files:
@@ -149,28 +153,17 @@ type = "collection"
 version = "1.0"
 author = "ledif"
 
-# Referenced layers (using relative or absolute paths)
+# Referenced layers 
 [layers]
-files = [
-  "meanings/base.toml",
-  "correspondences/astrology.toml",
-  "contexts/love.toml"
+namespaces = [
+  "context.love",
+  "context.career",
+  "tradition.golden_dawn",
+  "astrology.zodiac"
 ]
-
-# Card mappings for non-standard decks
-[card_mappings]
-"minor_arcana.torches.prince" = "minor_arcana.wands.knight"
-"minor_arcana.disks.princess" = "minor_arcana.pentacles.page"
-"major_arcana.adjustment" = "major_arcana.11"
-
-# Custom cards not in standard decks
-[custom_cards.major_arcana.happy_squirrel]
-name = "The Happy Squirrel"
-keywords = ["surprise", "playfulness", "hidden resources"]
-upright_meaning = "Unexpected resources appearing when needed"
-reversed_meaning = "Missing opportunities due to lack of awareness"
 ```
 
+Namespaces allow collections to reference categories of layers instead of individual files. Applications should resolve these namespaces to corresponding files dynamically.
 ## Layer Types
 
 ### Base Meanings
@@ -215,6 +208,108 @@ upright_meaning = "Celebration, harmony, marriage, home, and community"
 reversed_meaning = "Lack of support, transience, home conflicts"
 ```
 
+### Astrology Correspondences
+
+```toml
+# ~/.local/share/tarot/esoterica/correspondences/astrology.toml
+[meta]
+schema_version = "1.0"
+id = "astrology-correspondences"
+name = "Astrological Correspondences"
+type = "astrology"
+version = "1.0"
+
+[global]
+system = "Traditional Western Astrology"
+
+[cards.major_arcana.00]
+zodiac = "Aquarius"
+planetary_ruler = "Uranus"
+house = "11th House"
+```
+
+---
+
+### Numerology Correspondences
+
+```toml
+# ~/.local/share/tarot/esoterica/correspondences/numerology.toml
+[meta]
+schema_version = "1.0"
+id = "numerology-correspondences"
+name = "Numerology Correspondences"
+type = "numerology"
+version = "1.0"
+
+[numbers.four]
+meaning = "Foundation, stability, and structure"
+life_path_number = 4
+
+[cards.minor_arcana.wands.four]
+numerological_significance = "Represents achieving stability through effort"
+```
+
+---
+
+### Elemental Correspondences
+
+```toml
+# ~/.local/share/tarot/esoterica/correspondences/elements.toml
+[meta]
+schema_version = "1.0"
+id = "elemental-correspondences"
+name = "Elemental Correspondences"
+type = "elements"
+version = "1.0"
+
+[global]
+elements = ["Fire", "Water", "Earth", "Air"]
+
+[minor_arcana.wands]
+element = "Fire"
+qualities = ["passion", "energy", "creativity"]
+```
+
+---
+
+### Psychological Archetypes
+
+```toml
+# ~/.local/share/tarot/esoterica/correspondences/psychology.toml
+[meta]
+schema_version = "1.0"
+id = "psychological-archetypes"
+name = "Psychological Archetypes"
+type = "psychology"
+version = "1.0"
+
+[major_arcana]
+archetypes = [
+  {"card": "The Fool", "archetype": "The Innocent", "shadow": "Naivety, recklessness"},
+  {"card": "The Magician", "archetype": "The Creator", "shadow": "Manipulation, arrogance"}
+]
+```
+
+---
+
+### Mythology Layers
+
+```toml
+# ~/.local/share/tarot/esoterica/correspondences/mythology-greek.toml
+[meta]
+schema_version = "1.0"
+id = "greek-mythology-correspondences"
+name = "Greek Mythology Correspondences"
+type = "mythology.greek"
+version = "1.0"
+
+[major_arcana]
+system = "Greek Mythology"
+
+[cards.major_arcana.00]
+deity = "Dionysus"
+myth = "The Fool's journey represents the divine madness of Dionysus"
+```
 ### Context Interpretations
 
 ```toml
@@ -300,6 +395,11 @@ Properties accumulate across inherent levels and interpretive dimensions:
 3. **Use Canonical IDs**: Be consistent with the deck specification's canonical IDs.
 4. **Include Metadata**: Always include complete metadata in each file.
 
+
+
+When adding a new category (type), ensure it is descriptive, relevant to tarot correspondences, and documented within the description field in the meta section. Use namespaces (e.g., `mythology.greek`) for complex or multi-system categories. Applications should parse unknown type values without failing, either ignoring them or logging their presence for future updates.
+
+
 ### Application Integration
 
 Applications should:
@@ -308,6 +408,10 @@ Applications should:
 2. **Combine Compatible Layers**: Allow mixing of layers from different sources.
 3. **Present Layered Information**: Design interfaces that reveal the accumulated layers of meaning.
 4. **Maintain Clear Sources**: Indicate where specific interpretations come from.
+
+
+Applications should ignore unknown type values or categories gracefully. For example, if a file includes a type value of psychology that is not yet supported, the application should skip this layer without errors and log its presence for future compatibility. This ensures backward compatibility and allows the specification to evolve incrementally.
+
 
 ### Example: Multi-dimensional Access to the 4 of Wands
 
@@ -472,6 +576,9 @@ Applications should fall back to the `default_language` if a localized property 
 3. **Interactive Elements**: Affirmations, journaling prompts, etc.
 4. **Media References**: Literary, film, and cultural references.
 5. **Historical Evolution**: Development of meanings over time.
+
+
+The specification is designed to support new categories dynamically. By allowing contributors to define new type values and documenting them through the description field, the specification can grow organically without requiring frequent version updates. This modular approach ensures it remains relevant to evolving interpretative and symbolic frameworks.
 
 ## Conclusion
 
