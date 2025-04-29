@@ -88,6 +88,7 @@ Each esoterica layer is a single TOML file with this basic structure:
 # File metadata
 [meta]
 schema_version = "1.0"
+default_language = "en"
 id = "golden-dawn-astrology"
 name = "Golden Dawn Astrological Correspondences"
 type = "correspondences"  # meanings, correspondences, context, tradition
@@ -430,6 +431,39 @@ Components should be validated for:
 2. **Schema Compliance**: Verify files follow the correct structure with proper separation between inherent and interpretive properties.
 3. **Canonical IDs**: Check that all card references use canonical IDs.
 4. **Compatible Versions**: Verify that the schema version is supported.
+
+
+### i18n Support
+
+To future-proof the specification for internationalization (i18n) and localization (l10n), this version introduces non-intrusive i18n-ready features. English remains the default language, requiring no additional work for authors. Localization is optional and can be added incrementally.
+
+
+Key i18n principles:
+- **Default Language**: English (`en`) is assumed unless otherwise specified.
+- **Lightweight Structure**: No additional complexity for single-language files.
+- **Future-Proofing**: Supports translations and localized content without breaking compatibility.
+
+
+To prepare for localization, properties can include language-specific variants. By default, properties are written in the `default_language`.
+
+#### Example: Single-Language File (English Only)
+```toml
+[cards.major_arcana.00]
+name = "The Fool"
+description = "Represents new beginnings and spontaneity."
+```
+
+#### Example: Multilingual Extension
+```toml
+[cards.major_arcana.00]
+name = "The Fool"
+name.fr = "Le Fou"
+description = "Represents new beginnings and spontaneity."
+description.fr = "Représente de nouveaux départs et la spontanéité."
+```
+
+Applications should fall back to the `default_language` if a localized property is unavailable.
+
 
 ## Future Considerations
 
