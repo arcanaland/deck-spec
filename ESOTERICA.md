@@ -51,7 +51,7 @@ $XDG_DATA_HOME/tarot/esoterica/{facet}/{layer}.toml
 For example:
 - `$XDG_DATA_HOME/tarot/esoterica/context/love.toml` for the "love" context layer.
 - `$XDG_DATA_HOME/tarot/esoterica/tradition/golden_dawn.toml` for the Golden Dawn tradition layer.
-```
+
 
 
 ## Inherent vs. Interpretive Properties
