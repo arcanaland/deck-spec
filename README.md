@@ -18,7 +18,7 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
 ## Schema Versioning
 - This specification introduces a **schema version number** to ensure compatibility and future extensibility.
 - The schema version is specified in the `deck.toml` file under `[deck]` as `schema_version`.
-  
+
 ---
 
 ## Directory Skeleton
@@ -39,13 +39,13 @@ Decks must be delivered as a directory with a mandatory `deck.toml` file at the 
         ace.svg
         two.svg
         ...
-      cups/
-        ace.svg
-        ...
+  ansi32/                  # ANSI art representations (32 lines recommended)
+    major_arcana/
+      00.ansi              # The Fool
+      01.ansi              # The Magician
+    minor_arcana/
       swords/
-        ...
-      pentacles/
-        ...
+        three.ansi         # Three of Swords
   h750/                    # Low resolution raster images (optional)
   h1200/                   # Medium resolution raster images (optional)
   h2400/                   # High resolution raster images (optional)
@@ -217,6 +217,15 @@ This ensures that creating a deck can be as simple as placing files into the cor
 - Can use any supported image format
 - May have different dimensions and aspect ratios from the card fronts
 - Applications must handle card backs appropriately, preserving their exact dimensions
+
+### ANSI Art
+- ANSI art is supported for terminal-based tarot applications.
+- Files should be stored in the `ansi<lines>/` directory, organized by card type and suit (e.g., `ansi32/major_arcana/00.ansi`).
+- Each ANSI art file should represent a single card.
+- **Line Recommendation**: ANSI art should consider using 32 lines for improved readability in terminal applications.
+- ANSI files must use the `.ansi` extension and follow the same canonical ID structure as other formats (e.g., `major_arcana.00` for The Fool).
+
+Applications should treat ANSI art as an optional format, falling back to other image formats if ANSI files are not provided.
 
 ## Aspect Ratio
 
